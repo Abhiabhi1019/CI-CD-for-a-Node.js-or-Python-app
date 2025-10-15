@@ -1,20 +1,18 @@
-# Step 1: Use official Python image
-FROM python:3.10-slim
+# Use official Python image
+FROM python:3.12-slim
 
-# Step 2: Set working directory
+# Set working directory in container
 WORKDIR /app
 
-# Step 3: Copy dependency file
+# Copy Python files and requirements
 COPY requirements.txt .
+COPY app.py .
 
-# Step 4: Install dependencies
-RUN pip install -r requirements.txt
+# Install dependencies inside container
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Step 5: Copy project files
-COPY . .
-
-# Step 6: Expose port
+# Expose port
 EXPOSE 5000
 
-# Step 7: Run the app
-CMD ["python3", "app.py"]
+# Run the app
+CMD ["python", "app.py"]
