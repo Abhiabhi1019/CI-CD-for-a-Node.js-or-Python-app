@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo "Fetching code from GitHub..."
+                git 'https://github.com/Abhiabhi1019/CI-CD-for-a-Node.js-or-Python-app.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo "Installing dependencies..."
+                sh 'npm install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo "Running tests (if any)..."
+                sh 'npm test || echo "No tests found"'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo "Building Docker image..."
+                sh 'docker build -t my-node-app:latest .'
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                echo "Deploying container..."
+                sh '''
+                docker rm -f my-node-app || true
+                docker run -d -p 3000:3000 --name my-node-app my-node-app:latest
+                '''
+            }
+        }
+    }
+}
